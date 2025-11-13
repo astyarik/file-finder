@@ -2,17 +2,9 @@ import os
 import sys
 
 def find_files_by_name(search_term_string, start_path='.', output_file='check.txt'):
-    """
-    Рекурсивно ищет файлы, содержащие заданные слова в названии, 
-    начиная с указанного пути, и записывает их полные пути в текстовый файл.
-    Поддерживает мультипоиск, разделяя термины по "; ".
-    """
-    
-    # 1. Разделение строки на отдельные поисковые запросы
-    # Преобразуем каждый запрос в нижний регистр для регистронезависимого поиска
+
     search_terms = [term.strip().lower() for term in search_term_string.split(';')]
     
-    # Отфильтровываем пустые строки, если пользователь ввел лишние разделители
     search_terms = [term for term in search_terms if term]
 
     if not search_terms:
@@ -24,14 +16,11 @@ def find_files_by_name(search_term_string, start_path='.', output_file='check.tx
     
     found_files = []
     
-    # 2. Обход директорий
     try:
         for root, dirs, files in os.walk(start_path):
             for file_name in files:
                 file_name_lower = file_name.lower()
                 
-                # 3. Проверка на наличие любого из терминов в названии файла
-                # Если хотя бы один термин найден (any()), добавляем файл в список
                 if any(term in file_name_lower for term in search_terms):
                     full_path = os.path.join(root, file_name)
                     found_files.append(full_path)
@@ -41,7 +30,6 @@ def find_files_by_name(search_term_string, start_path='.', output_file='check.tx
         print(f"Произошла ошибка при обходе файловой системы: {e}")
         return
 
-    # 4. Запись результатов в файл check.txt
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             if found_files:
@@ -61,7 +49,6 @@ def find_files_by_name(search_term_string, start_path='.', output_file='check.tx
 
 if __name__ == "__main__":
     
-    # Запрос строки с несколькими словами для поиска
     search_input = input("Введите слова для поиска через разделитель '; ' (например, mine; craft): ").strip()
 
     if not search_input:
